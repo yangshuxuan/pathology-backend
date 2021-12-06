@@ -1,4 +1,5 @@
 from django.contrib import admin, messages
+from django.utils.encoding import escape_uri_path
 from django.db.models.aggregates import Count
 from django.db.models.query import QuerySet
 from django.utils.html import format_html, urlencode
@@ -81,8 +82,9 @@ class CustomerAdmin(admin.ModelAdmin):
     list_display = ['first_name', 'last_name',  'membership', 'orders']
     list_editable = ['membership']
     list_per_page = 10
-    ordering = ['first_name', 'last_name']
-    search_fields = ['first_name__istartswith', 'last_name__istartswith']
+    list_select_related = ['user']
+    ordering = ['user__first_name', 'user__last_name']
+    search_fields = ['user__first_name__istartswith', 'user__last_name__istartswith']
 
     @admin.display(ordering='orders_count')
     def orders(self, customer):
