@@ -34,12 +34,14 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'pathology.apps.PathologyConfig',
     'django.contrib.admin',
     'django.contrib.sessions',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'background_task',
     'django_filters',
     'rest_framework',
     'corsheaders',
@@ -49,6 +51,7 @@ INSTALLED_APPS = [
     'store',
     'tags',
     'likes',
+    # 'pathology',
     'core'
 ]
 
@@ -185,3 +188,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+#切图工具的路径
+CUT_TOOL = "C:\\Users\\yangshuxuan\\切图工具\\vips-dev-8.12\\bin\\vips.exe"
