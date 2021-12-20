@@ -5,13 +5,13 @@ from django.contrib.auth.models import User
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        if User.objects.count() == 0:
+        if settings.AUTH_USER_MODEL.objects.count() == 0:
             for user in settings.ADMINS:
                 username = user[0].replace(' ', '')
                 email = user[1]
                 password = 'admin'
                 print('Creating account for %s (%s)' % (username, email))
-                admin = User.objects.create_superuser(email=email, username=username, password=password)
+                admin = settings.AUTH_USER_MODEL.objects.create_superuser(email=email, username=username, password=password)
                 admin.is_active = True
                 admin.is_admin = True
                 admin.save()

@@ -15,15 +15,16 @@ set -euo pipefail
 
 
 # echo "Waiting for MySql to start..."
-./wait-for db:3306
+#./wait-for db:3306
 crond  -l 8
 python manage.py makemigrations  --noinput
 python manage.py migrate --noinput
 
-python manage.py initadmin
+#python manage.py initadmin
 # exec the final command:
 # exec python manage.py runserver 9001
 python manage.py collectstatic --no-input
 
 
-gunicorn storefront.wsgi.application --bind 0.0.0.0:80
+python manage.py runserver 0.0.0.0:80
+#gunicorn storefront.wsgi:application --bind 0.0.0.0:80
