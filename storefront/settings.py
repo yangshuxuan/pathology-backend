@@ -28,13 +28,12 @@ SECRET_KEY = 'django-insecure-hs6j037urx6iav+7#10%-vu4l4f5@@-1_zo)oft4g7$vf2$jmp
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'pathology.apps.PathologyConfig',
     'django.contrib.admin',
     'django.contrib.sessions',
     'django.contrib.auth',
@@ -51,7 +50,7 @@ INSTALLED_APPS = [
     'store',
     'tags',
     'likes',
-    # 'pathology',
+    'pathology',
     'core'
 ]
 
@@ -191,3 +190,5 @@ USE_TZ = True
 
 #切图工具的路径
 CUT_TOOL = "C:\\Users\\yangshuxuan\\切图工具\\vips-dev-8.12\\bin\\vips.exe"
+
+ADMINS=[("admin","admin@163.com")]
