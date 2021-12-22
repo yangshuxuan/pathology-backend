@@ -24,7 +24,6 @@ python manage.py migrate --noinput
 # exec the final command:
 # exec python manage.py runserver 9001
 python manage.py collectstatic --no-input
-
-
+python manage.py process_tasks & 
 python manage.py runserver 0.0.0.0:80
 #gunicorn storefront.wsgi:application --bind 0.0.0.0:80

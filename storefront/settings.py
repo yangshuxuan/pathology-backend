@@ -191,6 +191,6 @@ USE_L10N = True
 USE_TZ = True
 
 #切图工具的路径
-CUT_TOOL = "C:\\Users\\yangshuxuan\\切图工具\\vips-dev-8.12\\bin\\vips.exe"
+CUT_TOOL = "vips"
 
 ADMINS=[("admin","admin@163.com")]

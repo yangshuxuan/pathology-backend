@@ -16,6 +16,7 @@ FROM continuumio/miniconda3
 RUN apt-get update
 RUN apt-get install -y default-mysql-client
 RUN apt-get install -y default-libmysqlclient-dev
+RUN apt-get install -y libvips-dev
 WORKDIR /app
 COPY environment.yml .
 SHELL ["/bin/bash", "--login", "-c"]

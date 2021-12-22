@@ -10,5 +10,6 @@ def notify_user(pathologyPictureItem_id):
     f = PurePath(pathologyPictureItem.pathologyPicture.path)
     v = f.parent / f.stem
     subprocess.run([settings.CUT_TOOL, "dzsave",str(f),str(v)])
+
     pathologyPictureItem.isCutted=True
     pathologyPictureItem.save()
