@@ -175,8 +175,8 @@ DJOSER={
 }
 # from rest_framework_simplejwt.authentication import JWTAuthentication
 
-MEDIA_ROOT = BASE_DIR / 'media/'
-MEDIA_URL = '/media/'
+# MEDIA_ROOT = BASE_DIR / 'media/'
+# MEDIA_URL = '/media/'
 
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -194,3 +194,11 @@ USE_TZ = True
 CUT_TOOL = "vips"
 
 ADMINS=[("admin","admin@163.com")]
+# MEDIA_ROOT = BASE_DIR / 'media/'
+# MEDIA_URL = '/media/'
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+AWS_ACCESS_KEY_ID="WZLMGVCNSERJVGWZQTJY"
+AWS_SECRET_ACCESS_KEY='QRA1RN5cpWnbgpR1wUBnS82HxtSYiLWahn7bN2RZ'
+AWS_STORAGE_BUCKET_NAME="wuyuan"
+AWS_S3_HOST="s3.sh1a.qingstor.com"
