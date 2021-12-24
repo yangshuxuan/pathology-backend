@@ -38,16 +38,16 @@ def readImage(object_key):
                 break
             i += 1
 def writeImage(p):
-    
-    content_md5 = calculate_md5(str(p))
     object_key = str(p)
+    content_md5 = calculate_md5(object_key)
+    
     with p.open(mode="rb") as f:
         output = bucket.put_object(object_key=object_key, content_type="image/jpeg",content_md5=content_md5,x_qs_storage_class="STANDARD", body=f)
     if output.status_code != 201:
         print("Upload object(name: {}) to bucket({}) failed with given message: {}".format(object_key,"wuyuan",str(output.content, 'utf-8')))
     else:
         print("Upload success")
-    print(str(p))
+    print(object_key)
 
 def calculate_md5(filepath) -> str:
     h = hashlib.md5()
@@ -67,6 +67,7 @@ def notify_user(pathologyPictureItem_id):
         for file_name in files:
             p=Path(dirpath,file_name)
             writeImage(p)
+    writeImage(Path(f"{littleImageAfterCut}.dzi"))
             
 
     pathologyPictureItem.isCutted=True
