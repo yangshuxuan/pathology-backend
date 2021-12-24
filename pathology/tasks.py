@@ -37,6 +37,17 @@ def readImage(object_key):
             if len(output.content) < part_size:
                 break
             i += 1
+def writeImage(p):
+    
+    content_md5 = calculate_md5(str(p))
+    object_key = str(p)
+    with p.open(mode="rb") as f:
+        output = bucket.put_object(object_key=object_key, content_type="image/jpeg",content_md5=content_md5,x_qs_storage_class="STANDARD", body=f)
+    if output.status_code != 201:
+        print("Upload object(name: {}) to bucket({}) failed with given message: {}".format(object_key,"wuyuan",str(output.content, 'utf-8')))
+    else:
+        print("Upload success")
+    print(str(p))
 
 def calculate_md5(filepath) -> str:
     h = hashlib.md5()
@@ -48,22 +59,15 @@ def calculate_md5(filepath) -> str:
 @background(schedule=1)
 def notify_user(pathologyPictureItem_id):
     pathologyPictureItem = PathologyPictureItem.objects.get(pk=pathologyPictureItem_id)
-    f = PurePath(pathologyPictureItem.pathologyPicture.name)
-    v = f.stem
-    subprocess.run([settings.CUT_TOOL, "dzsave",str(f),str(v)])
-    for dirpath, dirnames, files in os.walk(str(v)):
-        print(f'Found directory: {dirpath}')
+    fileName = pathologyPictureItem.pathologyPicture.name
+    readImage(fileName)
+    littleImageAfterCut = str(PurePath(fileName).stem)
+    subprocess.run([settings.CUT_TOOL, "dzsave",fileName,littleImageAfterCut])
+    for dirpath, dirnames, files in os.walk(littleImageAfterCut):
         for file_name in files:
             p=Path(dirpath,file_name)
-            content_md5 = calculate_md5(str(p))
-            object_key = str(p)
-            with p.open(mode="rb") as f:
-                output = bucket.put_object(object_key=object_key, content_type="image/jpeg",content_md5=content_md5,x_qs_storage_class="STANDARD", body=f)
-            if output.status_code != 201:
-                print("Upload object(name: {}) to bucket({}) failed with given message: {}".format(object_key,"wuyuan",str(output.content, 'utf-8')))
-            else:
-                print("Upload success")
-            print(str(p))
+            writeImage(p)
+            
 
     pathologyPictureItem.isCutted=True
     pathologyPictureItem.save()
