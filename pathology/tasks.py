@@ -29,10 +29,10 @@ def readImage(object_key):
                 object_key,
                 bucket_name,
                 str(output.content, 'utf-8')))
-            os.remove("/tmp/" + object_key)
+            os.remove( object_key)
             break
         else:
-            with open("/tmp/" + object_key, 'a+b') as f:  # append to file in binary mode
+            with open( object_key, 'a+b') as f:  # append to file in binary mode
                 f.write(output.content)
             if len(output.content) < part_size:
                 break
