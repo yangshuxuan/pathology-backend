@@ -86,3 +86,5 @@ dependencies:
       - social-auth-core==4.1.0
       - uritemplate==4.1.1
       - urllib3==1.26.7
+      - pyyaml==6.0
+      - qingstor-sdk==2.6.0
