@@ -63,7 +63,7 @@ def notify_user(pathologyPictureItem_id):
     readImage(fileName)
     littleImageAfterCut = str(PurePath(fileName).stem)
     subprocess.run([settings.CUT_TOOL, "dzsave",fileName,littleImageAfterCut])
-    for dirpath, dirnames, files in os.walk(littleImageAfterCut):
+    for dirpath, dirnames, files in os.walk(f"{littleImageAfterCut}_files"):
         for file_name in files:
             p=Path(dirpath,file_name)
             writeImage(p)
