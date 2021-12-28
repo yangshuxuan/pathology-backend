@@ -9,7 +9,7 @@ import hashlib
 from qingstor.sdk.service.qingstor import QingStor
 from qingstor.sdk.config import Config
 
-config = Config('1', '2')
+config = Config('UDWJHUJBEYTFXHUZRRRV', 'FBmw5iebbyjA7HjwzNPGAluP6pzGeQKIKwX5bGrV')
 qingstor = QingStor(config)
 bucket_name='wuyuan'
 bucket = qingstor.Bucket('wuyuan', 'sh1a')
@@ -29,10 +29,10 @@ def readImage(object_key):
                 object_key,
                 bucket_name,
                 str(output.content, 'utf-8')))
-            os.remove( object_key)
+            os.remove(object_key)
             break
         else:
-            with open( object_key, 'a+b') as f:  # append to file in binary mode
+            with open(object_key, 'a+b') as f:  # append to file in binary mode
                 f.write(output.content)
             if len(output.content) < part_size:
                 break
@@ -62,8 +62,8 @@ def notify_user(pathologyPictureItem_id):
     fileName = pathologyPictureItem.pathologyPicture.name
     readImage(fileName)
     littleImageAfterCut = str(PurePath(fileName).stem)
-    subprocess.run([settings.CUT_TOOL, "dzsave",fileName,littleImageAfterCut])
-    for dirpath, dirnames, files in os.walk(littleImageAfterCut):
+    subprocess.run([settings.CUT_TOOL, "dzsave",fileName,littleImageAfterCut,"--tile-size", "4096"])
+    for dirpath, dirnames, files in os.walk(f"{littleImageAfterCut}_files"):
         for file_name in files:
             p=Path(dirpath,file_name)
             writeImage(p)

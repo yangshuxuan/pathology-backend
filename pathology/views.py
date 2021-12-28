@@ -27,7 +27,7 @@ class PathologyPictureItemViewSet(ModelViewSet):
         tree = ET.parse(v)
         root = tree.getroot()
         o=urlparse(pathologyPictureItem.pathologyPicture.url)
-        url = o._replace(path=str( f"{f.stem}_files")).geturl()
+        url = o._replace(path=str( f"{f.stem}_files/")).geturl()
 
         data = {
             "Image": {
