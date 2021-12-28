@@ -11,7 +11,7 @@ class Patient(models.Model):
         verbose_name = '病人'
         verbose_name_plural = '病人集'
 class  PathologyPictureItem(models.Model):
-    pathologyPicture = models.FileField(blank=True,null=True,verbose_name="病理图片")
+    pathologyPicture = models.FileField(verbose_name="病理图片")
     createdAt = models.DateTimeField(auto_now_add=True,verbose_name="图片上传时间")
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE,verbose_name="患者")
     description = models.TextField(blank=True,null=True,verbose_name="图片描述")
@@ -38,6 +38,9 @@ class LabelItem(models.Model):
     w = models.FloatField(verbose_name="标注宽度")
     h = models.FloatField(verbose_name="标注高度")
     zoomLevel = models.FloatField(verbose_name="标注时放大倍数")
+    regionPicture = models.FileField(blank=True,null=True,verbose_name="标注区域图")
+    def getPathologyPictureItemId(self):
+        return self.pathologypictureitem.id
     class Meta:
         verbose_name = '标注'
         verbose_name_plural = '标注集'

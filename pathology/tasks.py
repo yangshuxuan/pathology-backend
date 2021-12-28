@@ -1,5 +1,5 @@
 from background_task import background
-from .models import PathologyPictureItem
+from .models import LabelItem, PathologyPictureItem
 from pathlib import PurePath
 from django.conf import settings
 import subprocess
@@ -8,6 +8,7 @@ from pathlib import Path
 import hashlib
 from qingstor.sdk.service.qingstor import QingStor
 from qingstor.sdk.config import Config
+from django.core.files import File
 
 config = Config('UDWJHUJBEYTFXHUZRRRV', 'FBmw5iebbyjA7HjwzNPGAluP6pzGeQKIKwX5bGrV')
 qingstor = QingStor(config)
@@ -17,7 +18,8 @@ def readImage(object_key):
     part_size = 1024 * 1024 * 5  # 5M every part.
     # ensure the file we will write to does not exists.
     if os.path.exists(object_key):
-        os.remove(object_key)
+        # os.remove(object_key)
+        return 
     i = 0
     while True:
         lo = part_size * i
@@ -72,3 +74,17 @@ def notify_user(pathologyPictureItem_id):
 
     pathologyPictureItem.isCutted=True
     pathologyPictureItem.save()
+@background(schedule=1)
+def notify_croper(labelItem_id):
+    labelItem = LabelItem.objects.get(pk=labelItem_id)
+
+    pathologyPictureItem = labelItem.pathologypictureitem
+    fileName = pathologyPictureItem.pathologyPicture.name
+    readImage(fileName)
+    labelJpg = f"{labelItem_id}.jpg"
+    
+    # vips extract_area huge.svs mypy.dz[layout=google] 100 100 10000 10000
+    subprocess.run([settings.CUT_TOOL, "extract_area",fileName,labelJpg,labelItem.x,labelItem.y,labelItem.w,labelItem.h])
+    with open(labelJpg) as f:
+        labelItem.regionPicture.save(labelJpg,File(f))
+    labelItem.save()

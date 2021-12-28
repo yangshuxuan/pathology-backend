@@ -41,3 +41,7 @@ class PatientAdmin(admin.ModelAdmin):
     list_display = ['name','sex','age']
     inlines = [PathologyPictureInline]
     search_fields = ['name']
+
+@admin.register(models.LabelItem)
+class LabelItemAdmin(admin.ModelAdmin):
+    list_display = ['id','getPathologyPictureItemId','x','y','w','h','category','regionPicture']
