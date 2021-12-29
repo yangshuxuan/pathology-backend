@@ -84,7 +84,7 @@ def notify_croper(labelItem_id):
     labelJpg = f"{labelItem_id}.jpg"
     
     # vips extract_area huge.svs mypy.dz[layout=google] 100 100 10000 10000
-    subprocess.run([settings.CUT_TOOL, "extract_area",fileName,labelJpg,labelItem.x,labelItem.y,labelItem.w,labelItem.h])
-    with open(labelJpg) as f:
+    subprocess.run([settings.CUT_TOOL, "extract_area",fileName,labelJpg,str(int(labelItem.x)),str(int(labelItem.y)),str(int(labelItem.w)),str(int(labelItem.h))])
+    with open(labelJpg,"rb") as f:
         labelItem.regionPicture.save(labelJpg,File(f))
     labelItem.save()
