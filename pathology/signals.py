@@ -12,5 +12,5 @@ def cut_image_for_new_image(sender,**kargs):
 @receiver(post_save,sender=models.LabelItem)
 def crop_region_for_new_label(sender,**kargs):
     if kargs['created']:
-        notify_croper(kargs['instance'].id)
+        notify_croper(str(kargs['instance'].id))
         
