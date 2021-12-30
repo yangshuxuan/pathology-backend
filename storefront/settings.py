@@ -99,7 +99,7 @@ WSGI_APPLICATION = 'storefront.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'storefront3',
+        'NAME': 'storefront4',
         'HOST':'139.198.180.97',
         'USER':'root',
         'PASSWORD':'pcl123456'
@@ -204,3 +204,4 @@ AWS_STORAGE_BUCKET_NAME="wuyuan"
 AWS_S3_HOST="s3.sh1a.qingstor.com"
 AWS_S3_FILE_OVERWRITE = False
 AWS_QUERYSTRING_AUTH=False
+AWS_LOCATION="pathology"
