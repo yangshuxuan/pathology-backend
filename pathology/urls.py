@@ -10,6 +10,7 @@ pathologypictureitems_router = routers.NestedDefaultRouter(router,r'pathologypic
 pathologypictureitems_router.register('labelitems',views.LabelItemViewSet,basename='pathologypictureitem-labelitem')
 urlpatterns =[
     path('',include(router.urls)),
-    path('',include(pathologypictureitems_router.urls))
+    path('',include(pathologypictureitems_router.urls)),
+    path('generatedoc', views.generateDocument)
 
 ]

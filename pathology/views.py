@@ -12,6 +12,13 @@ from pathlib import PurePath
 from urllib.parse import urlparse
 from django.utils.encoding import escape_uri_path
 
+from django.http import HttpResponseBadRequest
+from docxtpl import DocxTemplate,RichText
+from django.conf import settings
+from  django.http import HttpResponse
+from io import BytesIO
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
 # Create your views here.
 
 class PathologyPictureItemViewSet(ModelViewSet):
@@ -52,3 +59,42 @@ class LabelItemViewSet(ModelViewSet):
         
     def get_serializer_context(self):
         return {"pathologypictureitem_pk":self.kwargs["pathologypictureitem_pk"]}
+
+def checkedElement():
+    elm = OxmlElement('w:checked')
+    elm.set(qn('w:val'),"true")
+    return elm
+def generateDocument(request):
+    patientId = request.GET.get("patient__id")
+    
+    p = get_object_or_404(PathologyPictureItem, pk=patientId)
+    # if p.doctors.filter(id = request.user.id).exists():
+    docx_title=f"{patientId}诊断报告.docx"
+    tpl = DocxTemplate(settings.BASE_DIR / 'template.docx')
+    rt = RichText('w:checked')
+    # rt.add('google',url_id=tpl.build_url_id('http://google.com'))
+
+    context = {
+        'name':rt,
+        
+    }
+
+    tpl.render(context)
+    
+
+
+    
+
+    # Prepare document for download        
+    # -----------------------------
+    f = BytesIO()
+    tpl.save(f)
+    length = f.tell()
+    f.seek(0)
+    response = HttpResponse(
+        f.getvalue(),
+        content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    )
+    response['Content-Disposition'] = f'attachment; filename={escape_uri_path(docx_title)}'
+    response['Content-Length'] = length
+    return response

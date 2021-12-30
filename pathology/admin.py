@@ -11,7 +11,7 @@ from . import models
 
 @admin.register(models.PathologyPictureItem)
 class PathologyPictureAdmin(admin.ModelAdmin):
-    list_display = ['id','patient_name','createdAt','description','pathologyPicture','isCutted','startDignose']
+    list_display = ['id','patient_name','createdAt','description','pathologyPicture','isCutted','startDignose','generateDignoseDoc']
     autocomplete_fields = ['patient']
     ordering = ['createdAt']
     list_per_page = 10
@@ -29,7 +29,12 @@ class PathologyPictureAdmin(admin.ModelAdmin):
             # query_string =  urlencode({'pathologyPictureItem': pathologyPictureItem.id})  # 2 category=42
             url = '{}/{}'.format(base_url, pathologyPictureItem.id)
             return format_html('<a href="{}"><img src="{}pathology/explorer.svg" width="25" height="20" alt="诊断"></a>',url,settings.STATIC_URL)
-        
+    @admin.display(description="诊断报告")
+    def generateDignoseDoc(self,patient):
+        base_url = "/pathology/generatedoc"
+        query_string =  urlencode({'patient__id': patient.id})  
+        url = '{}?{}'.format(base_url, query_string)
+        return format_html('<a href="{}"><img src="{}pathology/explorer.svg" width="25" height="20" alt="浏览"></a>',url,settings.STATIC_URL)    
 
 
 class PathologyPictureInline(admin.StackedInline):
