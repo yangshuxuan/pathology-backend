@@ -70,11 +70,14 @@ def writeImage(p):
     print(object_key)
 
 def writeImageCuttedImage(p):
+    part_size = 1024 * 1024 * 5
     storageRelativePath = Path(settings.CUTTED_IMAGES_LOCATION) / p.relative_to(settings.CUTTED_IMAGES_DIR) #在对象存储中的相对路径
-    
     with default_storage.open(str(storageRelativePath), 'wb') as f:
         with p.open('rb') as e:
-            f.write(File(e))
+            content=e.read(part_size)
+            while content:
+                f.write(content)
+                content=e.read(part_size)
             print("Upload success")
 
 
