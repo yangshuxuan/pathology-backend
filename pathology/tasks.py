@@ -9,6 +9,7 @@ import hashlib
 from qingstor.sdk.service.qingstor import QingStor
 from qingstor.sdk.config import Config
 from django.core.files import File
+from django.core.files.storage import default_storage
 
 config = Config('UDWJHUJBEYTFXHUZRRRV', 'FBmw5iebbyjA7HjwzNPGAluP6pzGeQKIKwX5bGrV')
 qingstor = QingStor(config)
@@ -39,6 +40,23 @@ def readImage(object_key):
             if len(output.content) < part_size:
                 break
             i += 1
+def readImageU(pathologyPicture):
+    """
+    输入是fieldfile类型,这样就避免使用青云的接口了
+    """
+    part_size = 1024 * 1024 * 5  # 5M every part.
+    
+    fileName = Path(pathologyPicture.name).name
+    locFullPathName = settings.ORIGIN_IMAGES_DIR / fileName
+    if locFullPathName.exists():
+        return locFullPathName
+
+    with locFullPathName.open('wb') as f:
+        content=pathologyPicture.read(part_size)
+        while content:
+            f.write(content)
+            content=pathologyPicture.read(part_size)
+    return locFullPathName
 def writeImage(p):
     object_key = str(p)
     content_md5 = calculate_md5(object_key)
@@ -51,6 +69,15 @@ def writeImage(p):
         print("Upload success")
     print(object_key)
 
+def writeImageCuttedImage(p):
+    storageRelativePath = Path(settings.CUTTED_IMAGES_LOCATION) / p.relative_to(settings.CUTTED_IMAGES_DIR) #在对象存储中的相对路径
+    
+    with default_storage.open(str(storageRelativePath), 'wb') as f:
+        with p.open('rb') as e:
+            f.write(File(e))
+            print("Upload success")
+
+
 def calculate_md5(filepath) -> str:
     h = hashlib.md5()
     with open(filepath, "rb") as f:
@@ -60,16 +87,28 @@ def calculate_md5(filepath) -> str:
 
 @background(schedule=1)
 def notify_user(pathologyPictureItem_id):
+    settings.ORIGIN_IMAGES_DIR.mkdir(parents=True, exist_ok=True)
+
+    settings.CUTTED_IMAGES_DIR.mkdir(parents=True, exist_ok=True)
+
     pathologyPictureItem = PathologyPictureItem.objects.get(pk=pathologyPictureItem_id)
-    fileName = pathologyPictureItem.pathologyPicture.name
-    readImage(fileName)
-    littleImageAfterCut = str(PurePath(fileName).stem)
-    subprocess.run([settings.CUT_TOOL, "dzsave",fileName,littleImageAfterCut,"--tile-size", "4096"])
-    for dirpath, dirnames, files in os.walk(f"{littleImageAfterCut}_files"):
+
+    pathologyPicture = pathologyPictureItem.pathologyPicture
+    
+    locFullPathName = readImageU(pathologyPicture)
+
+    fileName = Path(pathologyPicture.name).stem #没有后缀名的文件名
+
+    littleImageAfterCut = settings.CUTTED_IMAGES_DIR / fileName
+    littleImageAfterCutFiles = settings.CUTTED_IMAGES_DIR / f"{fileName}_files"
+    littleImageAfterCutDzi = settings.CUTTED_IMAGES_DIR / f"{fileName}.dzi"
+
+    subprocess.run([settings.CUT_TOOL, "dzsave",str(locFullPathName),str(littleImageAfterCut),"--tile-size", "4096"])
+    for dirpath, dirnames, files in os.walk(str(littleImageAfterCutFiles)):
         for file_name in files:
             p=Path(dirpath,file_name)
-            writeImage(p)
-    writeImage(Path(f"{littleImageAfterCut}.dzi"))
+            writeImageCuttedImage(p)
+    writeImageCuttedImage(littleImageAfterCutDzi)
             
 
     pathologyPictureItem.isCutted=True

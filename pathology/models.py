@@ -17,7 +17,7 @@ class Patient(models.Model):
         verbose_name_plural = '病人集'
 
 class  PathologyPictureItem(models.Model):
-    pathologyPicture = models.ImageField(verbose_name="病理图片",upload_to="origin_images")
+    pathologyPicture = models.FileField(verbose_name="病理图片",upload_to=settings.ORIGIN_IMAGES_LOCATION)
     createdAt = models.DateTimeField(auto_now_add=True,verbose_name="图片上传时间")
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE,verbose_name="患者")
     description = models.TextField(blank=True,null=True,verbose_name="图片描述")
