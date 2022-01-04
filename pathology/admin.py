@@ -110,3 +110,8 @@ class DiagnosisAdmin(admin.ModelAdmin):
         field = super(DiagnosisAdmin, self).formfield_for_manytomany(db_field, request, **kwargs)
         
         return field
+
+@admin.register(models.DiagnosisItem)
+class DiagnosisItemAdmin(admin.ModelAdmin):
+    list_display = ['id','diagnosis','pathologyPicture','last_update','createdAt']
+    

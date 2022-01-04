@@ -5,8 +5,8 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from pathology.tasks import readImage,readImageDzi
-from .models import PathologyPictureItem,LabelItem
-from .serializers import PathologyPictureItemSerializer,LabelItemSerializer
+from .models import PathologyPictureItem,LabelItem,DiagnosisItem
+from .serializers import PathologyPictureItemSerializer,LabelItemSerializer,DiagnosisItemSerializer
 from rest_framework.decorators import action
 from pathlib import PurePath
 from urllib.parse import urlparse
@@ -26,9 +26,14 @@ class PathologyPictureItemViewSet(ModelViewSet):
     queryset = PathologyPictureItem.objects.all()
     serializer_class = PathologyPictureItemSerializer
 
+    
+
+class DiagnosisItemViewSet(ModelViewSet):
+    queryset = DiagnosisItem.objects.all()
+    serializer_class = DiagnosisItemSerializer
     @action(detail=True)
-    def history(self,request,pk):
-        pathologyPictureItem = PathologyPictureItem.objects.get(pk=pk)
+    def image_detail(self,request,pk):
+        pathologyPictureItem = DiagnosisItem.objects.get(pk=pk).pathologyPicture
         
         v = str(readImageDzi(pathologyPictureItem))
         
@@ -55,14 +60,16 @@ class PathologyPictureItemViewSet(ModelViewSet):
         }
         
         return Response(data)
+
+
 class LabelItemViewSet(ModelViewSet):
     serializer_class = LabelItemSerializer
     def get_queryset(self):
-        get_object_or_404(PathologyPictureItem,pk=self.kwargs["pathologypictureitem_pk"])
-        return LabelItem.objects.filter(pathologypictureitem_id=self.kwargs["pathologypictureitem_pk"])
+        get_object_or_404(DiagnosisItem,pk=self.kwargs["diagnosisitem_pk"])
+        return LabelItem.objects.filter(diagnosisItem_id=self.kwargs["diagnosisitem_pk"])
         
     def get_serializer_context(self):
-        return {"pathologypictureitem_pk":self.kwargs["pathologypictureitem_pk"]}
+        return {"diagnosisitem_pk":self.kwargs["diagnosisitem_pk"]}
 
 def checkedElement():
     elm = OxmlElement('w:checked')

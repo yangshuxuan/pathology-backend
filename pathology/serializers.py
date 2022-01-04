@@ -1,11 +1,17 @@
 from rest_framework import serializers
-from .models import PathologyPictureItem,LabelItem
+from .models import PathologyPictureItem,LabelItem,DiagnosisItem
 class PathologyPictureItemSerializer(serializers.ModelSerializer):
     # id = serializers.IntegerField()
     # title = serializers.CharField(max_length=255)
     class Meta:
         model = PathologyPictureItem
         fields = ["id","pathologyPicture","createdAt","patient","description"]
+class DiagnosisItemSerializer(serializers.ModelSerializer):
+    # id = serializers.IntegerField()
+    # title = serializers.CharField(max_length=255)
+    class Meta:
+        model = DiagnosisItem
+        fields = ["id","diagnosis","pathologyPicture","createdAt"]
 
 class LabelItemSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,6 +20,6 @@ class LabelItemSerializer(serializers.ModelSerializer):
         
 
     def create(self, validated_data):
-        pathologypictureitem_id = self.context['pathologypictureitem_pk']
-        return LabelItem.objects.create(pathologypictureitem_id=pathologypictureitem_id,**validated_data)
+        diagnosisItem_id = self.context['diagnosisitem_pk']
+        return LabelItem.objects.create(diagnosisItem_id=diagnosisItem_id,**validated_data)
     
