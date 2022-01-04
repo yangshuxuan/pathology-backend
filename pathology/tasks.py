@@ -68,7 +68,25 @@ def writeImage(p):
     else:
         print("Upload success")
     print(object_key)
-
+def readImageDzi(pathologyPictureItem):
+    """
+    返回dzi路径
+    """
+    fileName = Path(pathologyPictureItem.pathologyPicture.name).stem
+    
+    littleImageAfterCutDzi = settings.CUTTED_IMAGES_DIR / f"{fileName}.dzi"
+    if littleImageAfterCutDzi.exists():
+        return littleImageAfterCutDzi
+    part_size = 1024 * 1024 * 5
+    storageRelativePath = Path(settings.CUTTED_IMAGES_LOCATION) / f"{fileName}.dzi" #在对象存储中的相对路径
+    with default_storage.open(str(storageRelativePath), 'rb') as f:
+        with littleImageAfterCutDzi.open('wb') as e:
+            content=f.read(part_size)
+            while content:
+                e.write(content)
+                content=f.read(part_size)
+            print("Download success")
+    return littleImageAfterCutDzi
 def writeImageCuttedImage(p):
     part_size = 1024 * 1024 * 5
     storageRelativePath = Path(settings.CUTTED_IMAGES_LOCATION) / p.relative_to(settings.CUTTED_IMAGES_DIR) #在对象存储中的相对路径

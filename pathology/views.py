@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from pathology.tasks import readImage
+from pathology.tasks import readImage,readImageDzi
 from .models import PathologyPictureItem,LabelItem
 from .serializers import PathologyPictureItemSerializer,LabelItemSerializer
 from rest_framework.decorators import action
@@ -19,6 +19,7 @@ from  django.http import HttpResponse
 from io import BytesIO
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
+from pathlib import Path
 # Create your views here.
 
 class PathologyPictureItemViewSet(ModelViewSet):
@@ -28,13 +29,16 @@ class PathologyPictureItemViewSet(ModelViewSet):
     @action(detail=True)
     def history(self,request,pk):
         pathologyPictureItem = PathologyPictureItem.objects.get(pk=pk)
-        f = PurePath(pathologyPictureItem.pathologyPicture.name)
-        v = f"{f.stem}.dzi"
-        readImage(v)
+        
+        v = str(readImageDzi(pathologyPictureItem))
+        
         tree = ET.parse(v)
         root = tree.getroot()
         o=urlparse(pathologyPictureItem.pathologyPicture.url)
-        url = o._replace(path=str( f"{f.stem}_files/")).geturl()
+
+        fileName = Path(pathologyPictureItem.pathologyPicture.name).stem
+        remoteCuttedFiles=str(Path(settings.AWS_LOCATION,settings.CUTTED_IMAGES_LOCATION) / f"{fileName}_files")
+        url = o._replace(path=str( f"{remoteCuttedFiles}/")).geturl()
 
         data = {
             "Image": {
