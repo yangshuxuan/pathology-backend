@@ -72,6 +72,9 @@ def readImageDzi(pathologyPictureItem):
     """
     返回dzi路径
     """
+    settings.ORIGIN_IMAGES_DIR.mkdir(parents=True, exist_ok=True)
+
+    settings.CUTTED_IMAGES_DIR.mkdir(parents=True, exist_ok=True)
     fileName = Path(pathologyPictureItem.pathologyPicture.name).stem
     
     littleImageAfterCutDzi = settings.CUTTED_IMAGES_DIR / f"{fileName}.dzi"

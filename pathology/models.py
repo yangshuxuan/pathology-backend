@@ -20,7 +20,7 @@ class  PathologyPictureItem(models.Model):
     pathologyPicture = models.FileField(verbose_name="病理图片",upload_to=settings.ORIGIN_IMAGES_LOCATION)
     createdAt = models.DateTimeField(auto_now_add=True,verbose_name="图片上传时间")
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE,verbose_name="患者")
-    description = models.TextField(blank=True,null=True,verbose_name="图片描述")
+    description = models.TextField(verbose_name="图片描述")
     isCutted = models.BooleanField(default=False,verbose_name="是否已经切图")
     def __str__(self) -> str:
         return f"{self.patient} {self.createdAt} {self.description}"

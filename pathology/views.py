@@ -27,7 +27,7 @@ class PathologyPictureItemViewSet(ModelViewSet):
     serializer_class = PathologyPictureItemSerializer
 
 class DiagnosisViewSet(ModelViewSet):
-    queryset = Diagnosis.objects.all()
+    queryset = Diagnosis.objects.select_related("patient").prefetch_related("items__pathologyPicture").all()
     serializer_class = DiagnosisSerializer    
 
 class DiagnosisItemViewSet(ModelViewSet):
