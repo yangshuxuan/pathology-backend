@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import PathologyPictureItem,LabelItem,DiagnosisItem
+from .models import PathologyPictureItem,LabelItem,DiagnosisItem,Diagnosis
 class PathologyPictureItemSerializer(serializers.ModelSerializer):
     # id = serializers.IntegerField()
     # title = serializers.CharField(max_length=255)
@@ -12,7 +12,11 @@ class DiagnosisItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = DiagnosisItem
         fields = ["id","diagnosis","pathologyPicture","createdAt"]
-
+class DiagnosisSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Diagnosis
+        fields = ["id","patient","createdAt",'items']
+    items=DiagnosisItemSerializer(many=True,read_only=True)
 class LabelItemSerializer(serializers.ModelSerializer):
     class Meta:
         model=LabelItem

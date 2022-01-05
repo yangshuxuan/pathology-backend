@@ -68,7 +68,7 @@ class  DiagnosisItem(models.Model):
 
     last_update = models.DateTimeField(auto_now=True,verbose_name="诊断项更新时间")
 
-    diagnosis = models.ForeignKey(Diagnosis,on_delete=models.PROTECT,verbose_name="诊断")
+    diagnosis = models.ForeignKey(Diagnosis,on_delete=models.PROTECT,verbose_name="诊断",related_name="items")
 
     pathologyPicture = models.ForeignKey(PathologyPictureItem,on_delete=models.PROTECT,verbose_name="病理图片")
     

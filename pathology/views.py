@@ -5,8 +5,8 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from pathology.tasks import readImage,readImageDzi
-from .models import PathologyPictureItem,LabelItem,DiagnosisItem
-from .serializers import PathologyPictureItemSerializer,LabelItemSerializer,DiagnosisItemSerializer
+from .models import PathologyPictureItem,LabelItem,DiagnosisItem,Diagnosis
+from .serializers import PathologyPictureItemSerializer,LabelItemSerializer,DiagnosisItemSerializer,DiagnosisSerializer
 from rest_framework.decorators import action
 from pathlib import PurePath
 from urllib.parse import urlparse
@@ -26,7 +26,9 @@ class PathologyPictureItemViewSet(ModelViewSet):
     queryset = PathologyPictureItem.objects.all()
     serializer_class = PathologyPictureItemSerializer
 
-    
+class DiagnosisViewSet(ModelViewSet):
+    queryset = Diagnosis.objects.all()
+    serializer_class = DiagnosisSerializer    
 
 class DiagnosisItemViewSet(ModelViewSet):
     queryset = DiagnosisItem.objects.all()
