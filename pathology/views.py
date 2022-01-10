@@ -11,7 +11,7 @@ from rest_framework.decorators import action
 from pathlib import PurePath
 from urllib.parse import urlparse
 from django.utils.encoding import escape_uri_path
-
+from django.db.models import Q
 from django.http import HttpResponseBadRequest
 from docxtpl import DocxTemplate,RichText
 from django.conf import settings
@@ -27,8 +27,11 @@ class PathologyPictureItemViewSet(ModelViewSet):
     serializer_class = PathologyPictureItemSerializer
 
 class DiagnosisViewSet(ModelViewSet):
-    queryset = Diagnosis.objects.select_related("patient").prefetch_related("items__pathologyPicture").all()
-    serializer_class = DiagnosisSerializer    
+    # queryset = Diagnosis.objects.select_related("patient").prefetch_related("items__pathologyPicture").all()
+    serializer_class = DiagnosisSerializer
+    def get_queryset(self):
+        user = self.request.user
+        return Diagnosis.objects.select_related("patient").prefetch_related("items__pathologyPicture").filter(Q(doctors=user)) 
 
 class DiagnosisItemViewSet(ModelViewSet):
     queryset = DiagnosisItem.objects.all()
