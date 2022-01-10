@@ -1,17 +1,24 @@
 from django.conf import settings
 from django.core.management.base import BaseCommand
 # from authentication.models import Account
-from django.contrib.auth.models import User
+from django.apps import apps
+
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        if settings.AUTH_USER_MODEL.objects.count() == 0:
+        usermodel = apps.get_model(settings.AUTH_USER_MODEL)
+        ai = usermodel.objects.filter(username="ai").first()
+        if not ai:
+            ai = usermodel.objects.create(email="ai@163.com", username="ai", password="ai")
+            ai.is_active = True
+            ai.save()
+        if usermodel.objects.count() == 0:
             for user in settings.ADMINS:
                 username = user[0].replace(' ', '')
                 email = user[1]
                 password = 'admin'
                 print('Creating account for %s (%s)' % (username, email))
-                admin = settings.AUTH_USER_MODEL.objects.create_superuser(email=email, username=username, password=password)
+                admin = usermodel.objects.create_superuser(email=email, username=username, password=password)
                 admin.is_active = True
                 admin.is_admin = True
                 admin.save()
