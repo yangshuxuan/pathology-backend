@@ -17,7 +17,7 @@ def create_diagnosis_for_ai(sender,**kargs):
     if kargs['created']:
         pic=kargs['instance']
         with transaction.atomic():
-            ai = apps.get_model(settings.AUTH_USER_MODEL).objects.filter(username="ai")
+            ai = apps.get_model(settings.AUTH_USER_MODEL).objects.filter(username="ai").first()
             diagnosis = models.Diagnosis.objects.create(patient=pic.patient)
             diagnosis.doctors.set([ai])
             diagnosis.save()
