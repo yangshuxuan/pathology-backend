@@ -141,13 +141,20 @@ def notify_user(pathologyPictureItem_id):
 def notify_croper(labelItem_id):
     labelItem = LabelItem.objects.get(pk=labelItem_id)
 
-    pathologyPictureItem = labelItem.pathologypictureitem
-    fileName = pathologyPictureItem.pathologyPicture.name
-    readImage(fileName)
-    labelJpg = f"{labelItem_id}.jpg"
+    pathologyPictureItem = labelItem.diagnosisItem.pathologyPicture
+    pathologyPicture = pathologyPictureItem.pathologyPicture.name
+    locFullPathName = readImageU(pathologyPicture)
+
+    
+
+    labelJpg = settings.CUTTED_IMAGES_DIR / f"{labelItem_id}.jpg"
+
+    destlabelJpg = Path(settings.LABEL_IMAGES_LOCATION,f"{labelItem_id}.jpg")
+    
+    
     
     # vips extract_area huge.svs mypy.dz[layout=google] 100 100 10000 10000
-    subprocess.run([settings.CUT_TOOL, "extract_area",fileName,labelJpg,str(int(labelItem.x)),str(int(labelItem.y)),str(int(labelItem.w)),str(int(labelItem.h))])
-    with open(labelJpg,"rb") as f:
-        labelItem.regionPicture.save(labelJpg,File(f))
+    subprocess.run([settings.CUT_TOOL, "extract_area",str(locFullPathName),str(labelJpg),str(int(labelItem.x)),str(int(labelItem.y)),str(int(labelItem.w)),str(int(labelItem.h))])
+    with labelJpg.open("rb") as f:
+        labelItem.regionPicture.save(str(destlabelJpg),File(f))
     labelItem.save()

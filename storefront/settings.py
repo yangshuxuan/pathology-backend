@@ -207,6 +207,7 @@ AWS_QUERYSTRING_AUTH=False
 AWS_LOCATION="pathology"
 ORIGIN_IMAGES_LOCATION = "origin_images"
 CUTTED_IMAGES_LOCATION = "cutted_images"
+LABEL_IMAGES_LOCATION = "label_images"
 
 
 CACHE_DIR = BASE_DIR / 'cache'

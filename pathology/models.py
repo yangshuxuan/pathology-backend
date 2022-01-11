@@ -97,7 +97,9 @@ class LabelItem(models.Model):
     regionPicture = models.FileField(blank=True,null=True,verbose_name="标注区域图")
     doctor = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.PROTECT,verbose_name="医生")
     confidence = models.FloatField(default=1.0,verbose_name="自信度")
-    def getPathologyPictureItemId(self):
+    
+    @admin.display(description="诊断ID")
+    def getDiagnosisItem(self):
         return self.diagnosisItem.id
     class Meta:
         verbose_name = '标注'

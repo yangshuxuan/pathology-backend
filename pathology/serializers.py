@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.conf import settings
+from django.apps import apps
 from .models import PathologyPictureItem,LabelItem,DiagnosisItem,Diagnosis,Patient
 class PathologyPictureItemSerializer(serializers.ModelSerializer):
     # id = serializers.IntegerField()
@@ -30,7 +31,7 @@ class DiagnosisPatchSerializer(serializers.ModelSerializer):
         fields = ["isFinished"]
 class DoctorSerializer(serializers.ModelSerializer):
     class Meta:
-        model = settings.AUTH_USER_MODEL
+        model = apps.get_model(settings.AUTH_USER_MODEL)
         fields = ["id","username"]
 class LabelItemSerializer(serializers.ModelSerializer):
     class Meta:
