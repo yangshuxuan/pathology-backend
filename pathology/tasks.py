@@ -142,7 +142,7 @@ def notify_croper(labelItem_id):
     labelItem = LabelItem.objects.get(pk=labelItem_id)
 
     pathologyPictureItem = labelItem.diagnosisItem.pathologyPicture
-    pathologyPicture = pathologyPictureItem.pathologyPicture.name
+    pathologyPicture = pathologyPictureItem.pathologyPicture
     locFullPathName = readImageU(pathologyPicture)
 
     
