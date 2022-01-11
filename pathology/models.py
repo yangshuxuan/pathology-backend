@@ -96,6 +96,7 @@ class LabelItem(models.Model):
     zoomLevel = models.FloatField(default=10.0,verbose_name="标注时放大倍数")
     regionPicture = models.FileField(blank=True,null=True,verbose_name="标注区域图")
     doctor = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.PROTECT,verbose_name="医生")
+    confidence = models.FloatField(default=1.0,verbose_name="自信度")
     def getPathologyPictureItemId(self):
         return self.diagnosisItem.id
     class Meta:

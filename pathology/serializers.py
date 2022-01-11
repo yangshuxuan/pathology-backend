@@ -35,8 +35,8 @@ class DoctorSerializer(serializers.ModelSerializer):
 class LabelItemSerializer(serializers.ModelSerializer):
     class Meta:
         model=LabelItem
-        fields=['id','createdAt','modifiedAt','category','x','y','w','h','zoomLevel','doctor']
-    doctor = DoctorSerializer()
+        fields=['id','createdAt','modifiedAt','category','x','y','w','h','zoomLevel','doctor','confidence']
+    doctor = DoctorSerializer(read_only=True)
         
 
     def create(self, validated_data):
