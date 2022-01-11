@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.conf import settings
 from .models import PathologyPictureItem,LabelItem,DiagnosisItem,Diagnosis,Patient
 class PathologyPictureItemSerializer(serializers.ModelSerializer):
     # id = serializers.IntegerField()
@@ -23,13 +24,23 @@ class DiagnosisSerializer(serializers.ModelSerializer):
         fields = ["id","patient","createdAt",'items']
     patient = PatientSerializer()
     items=DiagnosisItemSerializer(many=True,read_only=True)
+class DiagnosisPatchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Diagnosis
+        fields = ["isFinished"]
+class DoctorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = settings.AUTH_USER_MODEL
+        fields = ["id","username"]
 class LabelItemSerializer(serializers.ModelSerializer):
     class Meta:
         model=LabelItem
-        fields=['id','createdAt','modifiedAt','category','x','y','w','h','zoomLevel']
+        fields=['id','createdAt','modifiedAt','category','x','y','w','h','zoomLevel','doctor']
+    doctor = DoctorSerializer()
         
 
     def create(self, validated_data):
         diagnosisItem_id = self.context['diagnosisitem_pk']
-        return LabelItem.objects.create(diagnosisItem_id=diagnosisItem_id,**validated_data)
+        doctor = self.context['doctor']
+        return LabelItem.objects.create(diagnosisItem_id=diagnosisItem_id,doctor=doctor,**validated_data)
     

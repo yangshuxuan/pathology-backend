@@ -85,7 +85,10 @@ class PatientAdmin(admin.ModelAdmin):
 
 @admin.register(models.LabelItem)
 class LabelItemAdmin(admin.ModelAdmin):
-    list_display = ['id','getPathologyPictureItemId','x','y','w','h','category','regionPicture']
+    list_display = ['id','getPathologyPictureItemId','x','y','w','h','category','doctor_name','regionPicture']
+    @admin.display(description="医生")
+    def doctor_name(self, labelItem):
+        return labelItem.doctor.username
 
 class DiagnosisItemInline(admin.TabularInline):
     autocomplete_fields = ['pathologyPicture']

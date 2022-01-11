@@ -6,7 +6,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from pathology.tasks import readImage,readImageDzi
 from .models import PathologyPictureItem,LabelItem,DiagnosisItem,Diagnosis
-from .serializers import PathologyPictureItemSerializer,LabelItemSerializer,DiagnosisItemSerializer,DiagnosisSerializer
+from .serializers import PathologyPictureItemSerializer,LabelItemSerializer,DiagnosisItemSerializer,DiagnosisSerializer,DiagnosisPatchSerializer
 from rest_framework.decorators import action
 from pathlib import PurePath
 from urllib.parse import urlparse
@@ -20,6 +20,7 @@ from io import BytesIO
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from pathlib import Path
+from django_filters.rest_framework import DjangoFilterBackend
 # Create your views here.
 
 class PathologyPictureItemViewSet(ModelViewSet):
@@ -29,10 +30,19 @@ class PathologyPictureItemViewSet(ModelViewSet):
 class DiagnosisViewSet(ModelViewSet):
     # queryset = Diagnosis.objects.select_related("patient").prefetch_related("items__pathologyPicture").all()
     serializer_class = DiagnosisSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['isFinished']
+    def get_serializer_class(self):
+        if self.request.method=="PATCH":
+            return DiagnosisPatchSerializer
+        else:
+            return DiagnosisSerializer
     def get_queryset(self):
         user = self.request.user
-        return Diagnosis.objects.select_related("patient").prefetch_related("items__pathologyPicture").filter(Q(doctors=user)) 
-
+        queryset = Diagnosis.objects.select_related("patient").prefetch_related("items__pathologyPicture")
+        if not user.is_anonymous :
+            queryset.filter(Q(doctors=user)) 
+        return queryset
 class DiagnosisItemViewSet(ModelViewSet):
     queryset = DiagnosisItem.objects.all()
     serializer_class = DiagnosisItemSerializer
@@ -74,7 +84,8 @@ class LabelItemViewSet(ModelViewSet):
         return LabelItem.objects.filter(diagnosisItem_id=self.kwargs["diagnosisitem_pk"])
         
     def get_serializer_context(self):
-        return {"diagnosisitem_pk":self.kwargs["diagnosisitem_pk"]}
+        
+        return {"diagnosisitem_pk":self.kwargs["diagnosisitem_pk"],"doctor":self.request.user}
 
 def checkedElement():
     elm = OxmlElement('w:checked')
