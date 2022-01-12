@@ -100,7 +100,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'storefront4',
-        'HOST':'139.198.180.97',
+        #'HOST':'139.198.180.97',
+        'HOST':'db',
         'USER':'root',
         'PASSWORD':'pcl123456'
     }
