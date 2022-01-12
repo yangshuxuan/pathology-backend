@@ -110,7 +110,7 @@ class LabelItemAdmin(admin.ModelAdmin):
     @admin.display(description="标注区域图")
     def showRegionPicture(self, labelItem):
         # return mark_safe('<img src="{url}" />'.format(url = labelItem.regionPicture.url)
-        width = 200
+        width = 50
         # if obj and obj.pathologyPicture  and obj.pathologyPicture.size <= 10 *1024 * 1024  :
         return mark_safe('<img src="{url}" width="{width}" height={height} />'.format(
             url = labelItem.regionPicture.url,
