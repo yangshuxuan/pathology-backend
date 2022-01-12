@@ -7,11 +7,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         usermodel = apps.get_model(settings.AUTH_USER_MODEL)
-        ai = usermodel.objects.filter(username="ai").first()
-        if not ai:
-            ai = usermodel.objects.create(email="ai@163.com", username="ai", password="ai")
-            ai.is_active = True
-            ai.save()
         if usermodel.objects.count() == 0:
             for user in settings.ADMINS:
                 username = user[0].replace(' ', '')
@@ -24,3 +19,8 @@ class Command(BaseCommand):
                 admin.save()
         else:
             print('Admin accounts can only be initialized if no Accounts exist')
+        ai = usermodel.objects.filter(username="ai").first()
+        if not ai:
+            ai = usermodel.objects.create(email="ai@163.com", username="ai", password="ai")
+            ai.is_active = True
+            ai.save()

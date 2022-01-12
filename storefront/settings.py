@@ -99,7 +99,8 @@ WSGI_APPLICATION = 'storefront.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'storefront4',
+        #'NAME': 'storefront4',
+        'NAME': 'operatepathology',
         #'HOST':'139.198.180.97',
         'HOST':'db',
         'USER':'root',

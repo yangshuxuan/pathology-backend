@@ -15,6 +15,7 @@ set -euo pipefail
 
 
 # echo "Waiting for MySql to start..."
+chmod u+x ./wait-for
 ./wait-for db:3306
 #crond  -l 8
 python manage.py makemigrations  --noinput
