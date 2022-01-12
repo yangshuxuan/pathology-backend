@@ -41,7 +41,7 @@ class DiagnosisViewSet(ModelViewSet):
         user = self.request.user
         queryset = Diagnosis.objects.select_related("patient").prefetch_related("items__pathologyPicture")
         if not user.is_anonymous :
-            queryset.filter(Q(doctors=user)) 
+            queryset = queryset.filter(Q(doctors=user)) 
         return queryset
 class DiagnosisItemViewSet(ModelViewSet):
     queryset = DiagnosisItem.objects.all()
