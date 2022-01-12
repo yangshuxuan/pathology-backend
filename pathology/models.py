@@ -19,11 +19,11 @@ class Patient(models.Model):
 class  PathologyPictureItem(models.Model):
     pathologyPicture = models.FileField(verbose_name="病理图片",upload_to=settings.ORIGIN_IMAGES_LOCATION)
     createdAt = models.DateTimeField(auto_now_add=True,verbose_name="图片上传时间")
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE,verbose_name="患者")
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE,verbose_name="患者",related_name='pathologypictures')
     description = models.TextField(verbose_name="图片描述")
     isCutted = models.BooleanField(default=False,verbose_name="是否已经切图")
     def __str__(self) -> str:
-        return f"{self.patient} {self.createdAt} {self.description}"
+        return f"{self.patient}-{self.id}-{self.description}"
 
     class Meta:
         verbose_name = '病理图片'
@@ -72,7 +72,8 @@ class  DiagnosisItem(models.Model):
 
     pathologyPicture = models.ForeignKey(PathologyPictureItem,on_delete=models.PROTECT,verbose_name="病理图片")
     
-    
+    def __str__(self) -> str:
+        return f"第{self.id}诊断项"
     class Meta:
         verbose_name = '诊断项'
         verbose_name_plural = '诊断项集'
@@ -86,7 +87,7 @@ class LabelItem(models.Model):
     id = models.UUIDField(primary_key=True,default=uuid4)
     createdAt = models.DateTimeField(auto_now_add=True,verbose_name="标注时间")
     modifiedAt = models.DateTimeField(auto_now=True,verbose_name="标注更新时间")
-    diagnosisItem = models.ForeignKey(DiagnosisItem,on_delete=models.PROTECT,verbose_name="诊断项")
+    diagnosisItem = models.ForeignKey(DiagnosisItem,on_delete=models.PROTECT,verbose_name="诊断项",related_name="items")
     category = models.CharField(
         max_length=4, choices=CATEGORY_CHOICES, default=MUSHROOM,verbose_name="类别")
     x = models.FloatField(verbose_name="标注起点坐标X")
@@ -94,7 +95,7 @@ class LabelItem(models.Model):
     w = models.FloatField(verbose_name="标注宽度")
     h = models.FloatField(verbose_name="标注高度")
     zoomLevel = models.FloatField(default=10.0,verbose_name="标注时放大倍数")
-    regionPicture = models.FileField(blank=True,null=True,verbose_name="标注区域图")
+    regionPicture = models.ImageField(blank=True,null=True,verbose_name="标注区域图")
     doctor = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.PROTECT,verbose_name="医生")
     confidence = models.FloatField(default=1.0,verbose_name="自信度")
     
