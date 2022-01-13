@@ -112,7 +112,7 @@ def generateDocument(request):
     tpl = DocxTemplate(settings.BASE_DIR / 'template.docx')
     rt = RichText('w:checked')
     # rt.add('google',url_id=tpl.build_url_id('http://google.com'))
-    images = [InlineImage(tpl, str(readRegionImage(lableitem)), height=Mm(10)) for lableitem in report.labelitems]
+    images = [InlineImage(tpl, str(readRegionImage(lableitem)), height=Mm(30)) for lableitem in report.labelitems.all()]
 
     context = {
         'name':rt,
