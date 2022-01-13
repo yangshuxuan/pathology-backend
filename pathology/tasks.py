@@ -137,6 +137,24 @@ def notify_user(pathologyPictureItem_id):
 
     pathologyPictureItem.isCutted=True
     pathologyPictureItem.save()
+def readRegionImage(labelItem):
+    """
+    输入是fieldfile类型,这样就避免使用青云的接口了
+    """
+    part_size = 1024 * 1024 * 5  # 5M every part.
+    # labelItem = LabelItem.objects.get(pk=labelItem_id)
+    regionPicture=labelItem.regionPicture
+    fileName = Path(regionPicture.name).name
+    locFullPathName = settings.CUTTED_IMAGES_DIR / fileName
+    if locFullPathName.exists():
+        return locFullPathName
+
+    with locFullPathName.open('wb') as f:
+        content=regionPicture.read(part_size)
+        while content:
+            f.write(content)
+            content=regionPicture.read(part_size)
+    return locFullPathName
 @background(schedule=1)
 def notify_croper(labelItem_id):
     labelItem = LabelItem.objects.get(pk=labelItem_id)

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.conf import settings
 from django.apps import apps
-from .models import PathologyPictureItem,LabelItem,DiagnosisItem,Diagnosis,Patient
+from .models import PathologyPictureItem,LabelItem,DiagnosisItem,Diagnosis,Patient, Report
 class PathologyPictureItemSerializer(serializers.ModelSerializer):
     # id = serializers.IntegerField()
     # title = serializers.CharField(max_length=255)
@@ -44,4 +44,14 @@ class LabelItemSerializer(serializers.ModelSerializer):
         diagnosisItem_id = self.context['diagnosisitem_pk']
         doctor = self.context['doctor']
         return LabelItem.objects.create(diagnosisItem_id=diagnosisItem_id,doctor=doctor,**validated_data)
+class ReportSerializer(serializers.ModelSerializer):
     
+    class Meta:
+        model = Report
+        fields = ["id","diagnosis","labelitems","modifiedAt","createdAt"]
+class ReportPatchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Report
+        fields = ["labelitems"]
+    def update(self, instance, validated_data):
+        return super().update(instance, validated_data)

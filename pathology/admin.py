@@ -202,3 +202,18 @@ class DiagnosisItemAdmin(admin.ModelAdmin):
             labelitem_count=Count('items')
         )
     
+@admin.register(models.Report)
+class ReportAdmin(admin.ModelAdmin):
+    list_display = ['id','show_diagnosis','modifiedAt','createdAt']
+    filter_horizontal = (
+        'labelitems',
+    )
+    @admin.display(description="诊断ID")
+    def show_diagnosis(self, report):
+        url = (
+            reverse('admin:pathology_diagnosis_changelist')
+            + '?'
+            + urlencode({
+                'id': str(report.diagnosis.id)
+            }))
+        return format_html('<a href="{}">{}</a>', url, report.diagnosis.id)

@@ -4,16 +4,16 @@ import xml.etree.ElementTree as ET
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from pathology.tasks import readImage,readImageDzi
-from .models import PathologyPictureItem,LabelItem,DiagnosisItem,Diagnosis
-from .serializers import PathologyPictureItemSerializer,LabelItemSerializer,DiagnosisItemSerializer,DiagnosisSerializer,DiagnosisPatchSerializer
+from pathology.tasks import readImageDzi
+from .models import PathologyPictureItem,LabelItem,DiagnosisItem,Diagnosis, Report
+from .serializers import PathologyPictureItemSerializer,LabelItemSerializer,DiagnosisItemSerializer,DiagnosisSerializer,DiagnosisPatchSerializer,ReportSerializer,ReportPatchSerializer
 from rest_framework.decorators import action
-from pathlib import PurePath
+
 from urllib.parse import urlparse
 from django.utils.encoding import escape_uri_path
 from django.db.models import Q
-from django.http import HttpResponseBadRequest
-from docxtpl import DocxTemplate,RichText
+from .tasks import readRegionImage
+
 from django.conf import settings
 from  django.http import HttpResponse
 from io import BytesIO
@@ -21,6 +21,11 @@ from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from pathlib import Path
 from django_filters.rest_framework import DjangoFilterBackend
+from docxtpl import DocxTemplate, InlineImage,RichText
+
+# for height and width you have to use millimeters (Mm), inches or points(Pt) class :
+from docx.shared import Mm
+import jinja2
 # Create your views here.
 
 class PathologyPictureItemViewSet(ModelViewSet):
@@ -86,31 +91,36 @@ class LabelItemViewSet(ModelViewSet):
     def get_serializer_context(self):
         
         return {"diagnosisitem_pk":self.kwargs["diagnosisitem_pk"],"doctor":self.request.user}
-
+class ReportViewSet(ModelViewSet):
+    queryset = Report.objects.all()
+    serializer_class = ReportSerializer
+    def get_serializer_class(self):
+        if self.request.method=="PATCH":
+            return ReportPatchSerializer
+        else:
+            return ReportSerializer
 def checkedElement():
     elm = OxmlElement('w:checked')
     elm.set(qn('w:val'),"true")
     return elm
 def generateDocument(request):
-    patientId = request.GET.get("patient__id")
+    reportId = request.GET.get("report__id")
     
-    p = get_object_or_404(PathologyPictureItem, pk=patientId)
+    report = get_object_or_404(Report, pk=reportId)
     # if p.doctors.filter(id = request.user.id).exists():
-    docx_title=f"{patientId}诊断报告.docx"
+    docx_title=f"{report.diagnosis.patient.name}诊断报告.docx"
     tpl = DocxTemplate(settings.BASE_DIR / 'template.docx')
     rt = RichText('w:checked')
     # rt.add('google',url_id=tpl.build_url_id('http://google.com'))
+    images = [InlineImage(tpl, str(readRegionImage(lableitem)), height=Mm(10)) for lableitem in report.labelitems]
 
     context = {
         'name':rt,
+        'images':images
         
     }
-
-    tpl.render(context)
-    
-
-
-    
+    jinja_env = jinja2.Environment(autoescape=True)
+    tpl.render(context, jinja_env)
 
     # Prepare document for download        
     # -----------------------------
