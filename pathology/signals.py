@@ -12,6 +12,12 @@ def cut_image_for_new_image(sender,**kargs):
     if kargs['created']:
         notify_user(kargs['instance'].id)
 
+@receiver(post_save,sender=models.Diagnosis)
+def create_report_for_new_diagnosis(sender,**kargs):
+    if kargs['created']:
+        models.Report.objects.create(diagnosis=kargs['instance'])
+
+
 @receiver(post_save,sender=models.PathologyPictureItem)
 def create_diagnosis_for_ai(sender,**kargs):
     if kargs['created']:

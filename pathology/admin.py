@@ -16,7 +16,7 @@ admin.site.site_title = "病理辅助诊断"
 
 @admin.register(models.PathologyPictureItem)
 class PathologyPictureAdmin(admin.ModelAdmin):
-    list_display = ['id','show_patient','createdAt','description','pathologyPicture','isCutted','startDignose','generateDignoseDoc']
+    list_display = ['id','show_patient','createdAt','description','pathologyPicture','isCutted']
     autocomplete_fields = ['patient']
     ordering = ['createdAt']
     list_per_page = 10
@@ -33,20 +33,7 @@ class PathologyPictureAdmin(admin.ModelAdmin):
                 'id': str(pathologyPictureItem.patient.id)
             }))
         return format_html('<a href="{}">{}</a>', url, pathologyPictureItem.patient.name)
-    @admin.display(description="开始诊断")
-    def startDignose(self,pathologyPictureItem):
-        if pathologyPictureItem.isCutted:
-            base_url = "http://localhost:3000"
-            # query_string =  urlencode({'pathologyPictureItem': pathologyPictureItem.id})  # 2 category=42
-            url = '{}/{}'.format(base_url, pathologyPictureItem.id)
-            return format_html('<a href="{}"><img src="{}pathology/explorer.svg" width="25" height="20" alt="诊断"></a>',url,settings.STATIC_URL)
-    @admin.display(description="诊断报告")
-    def generateDignoseDoc(self,patient):
-        base_url = "/pathology/generatedoc"
-        query_string =  urlencode({'patient__id': patient.id})  
-        url = '{}?{}'.format(base_url, query_string)
-        return format_html('<a href="{}"><img src="{}pathology/explorer.svg" width="25" height="20" alt="浏览"></a>',url,settings.STATIC_URL)    
-
+ 
 
 class DiagnosisInline(admin.StackedInline):
     model = models.Diagnosis
@@ -128,9 +115,18 @@ class DiagnosisItemInline(admin.TabularInline):
 @admin.register(models.Diagnosis)
 class DiagnosisAdmin(admin.ModelAdmin):
     autocomplete_fields = ['patient']
-    list_display = ['id','show_patient','doctorNames','diagnosisitem_count','isFinished','last_update','createdAt']
+    list_display = ['id','show_patient','doctorNames','diagnosisitem_count','show_report','isFinished','last_update','createdAt']
     inlines = [DiagnosisItemInline]
     search_fields = ['patient__name']
+    @admin.display(description="报告ID")
+    def show_report(self, diagnosis):
+        url = (
+            reverse('admin:pathology_report_changelist')
+            + '?'
+            + urlencode({
+                'id': str(diagnosis.report.id)
+            }))
+        return format_html('<a href="{}">{}</a>', url, diagnosis.report.id)
     @admin.display(description="患者")
     def show_patient(self, diagnosis):
         url = (
@@ -204,10 +200,17 @@ class DiagnosisItemAdmin(admin.ModelAdmin):
     
 @admin.register(models.Report)
 class ReportAdmin(admin.ModelAdmin):
-    list_display = ['id','show_diagnosis','modifiedAt','createdAt']
+    list_display = ['id','show_diagnosis','generateDignoseDoc','modifiedAt','createdAt']
     filter_horizontal = (
         'labelitems',
     )
+    @admin.display(description="诊断报告")
+    def generateDignoseDoc(self,report):
+        base_url = "/pathology/generatedoc"
+        query_string =  urlencode({'report__id': report.id})  
+        url = '{}?{}'.format(base_url, query_string)
+        return format_html('<a href="{}"><img src="{}pathology/explorer.svg" width="25" height="20" alt="浏览"></a>',url,settings.STATIC_URL)    
+
     @admin.display(description="诊断ID")
     def show_diagnosis(self, report):
         url = (
