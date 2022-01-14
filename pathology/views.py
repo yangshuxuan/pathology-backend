@@ -122,7 +122,7 @@ def generateDocument(request):
     allimages=[]
     t = []
     i = 0
-    v = 4
+    v = 3
     for image in images:
         i+=1
         t.append(image)
