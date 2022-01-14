@@ -119,9 +119,24 @@ def generateDocument(request):
     # rt.add('google',url_id=tpl.build_url_id('http://google.com'))
     images = [InlineImage(tpl, str(readRegionImage(lableitem)), height=Mm(30)) for lableitem in report.labelitems.all()]
 
+    allimages=[]
+    t = []
+    i = 0
+    v = 4
+    for image in images:
+        i+=1
+        t.append(image)
+        if i % v ==0:
+            i=0
+            allimages.append(t)
+            t=[]
+    if i!=0:
+        allimages.append(t)
+    
+
     context = {
         'name':rt,
-        'images':images
+        'allimages':allimages
         
     }
     jinja_env = jinja2.Environment(autoescape=True)
