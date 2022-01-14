@@ -82,14 +82,35 @@ class  DiagnosisItem(models.Model):
 class LabelItem(models.Model):
     MUSHROOM = 'M'
     CATEGORY_CHOICES = [
-        (MUSHROOM, '真菌')
+        (MUSHROOM, '真菌'),
+        ("TR",  "阴道滴虫" ),
+        ("AM",  "放线菌" ),
+        ("CL",  "线索细胞" ),
+        ("CMV",  "巨细胞病毒" ),
+        ("HSV",  "疱疹病毒" ),
+        ("IM",  "炎症" ),
+        ("S",  "萎缩" ),
+        ("ASC-US",  "非典型鳞状细胞意义不明" ),
+        ("ASC-H",  "非典型鳞状细胞不除外上皮高度病" ),
+        ("AGC(NSL)-CC",  "非典型腺细胞(无具体指向)宫颈管" ),
+        ("AGC(NSL)-E",  "非典型腺细胞(无具体指向)宫内膜" ),
+        ("AGC(NSL)-US",  "非典型腺细胞(无具体指向)不能确定来源" ),
+        ("LSIL",  "鳞状上皮内低度病变" ),
+        ("AGC(FN)-CC",  "非典型腺细胞(倾向瘤变)宫颈管" ),
+        ("AGC(FN)-US",  "非典型腺细胞(倾向瘤变)不能确定来源" ),
+        ("HSIL",  "鳞状上皮内高度病变" ),
+        ("AIS",  "颈管原位癌" ),
+        ("SCC",  "鳞状细胞癌" ),
+        ("GC-CC",  "腺癌宫颈管" ),
+        ("GC-E",  "腺癌宫内膜" ),
+        ("GC-OT",  "腺癌其他" )
     ]
     id = models.UUIDField(primary_key=True,default=uuid4)
     createdAt = models.DateTimeField(auto_now_add=True,verbose_name="标注时间")
     modifiedAt = models.DateTimeField(auto_now=True,verbose_name="标注更新时间")
     diagnosisItem = models.ForeignKey(DiagnosisItem,on_delete=models.PROTECT,verbose_name="诊断项",related_name="items")
     category = models.CharField(
-        max_length=4, choices=CATEGORY_CHOICES, default=MUSHROOM,verbose_name="类别")
+        max_length=20, choices=CATEGORY_CHOICES, default=MUSHROOM,verbose_name="类别")
     x = models.FloatField(verbose_name="标注起点坐标X")
     y = models.FloatField(verbose_name="标注起点坐标Y")
     w = models.FloatField(verbose_name="标注宽度")
