@@ -111,7 +111,7 @@ class Report(models.Model):
     createdAt = models.DateTimeField(auto_now_add=True,verbose_name="报告时间")
     modifiedAt = models.DateTimeField(auto_now=True,verbose_name="报告更新时间")
     diagnosis = models.ForeignKey(Diagnosis,on_delete=models.PROTECT,verbose_name="诊断",related_name="reports")
-    labelitems = models.ManyToManyField(LabelItem,verbose_name="标注")
+    labelitems = models.ManyToManyField(LabelItem,blank=True,null=True,verbose_name="标注")
     class Meta:
         verbose_name = '报告'
         verbose_name_plural = '报告集'
