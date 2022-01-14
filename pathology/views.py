@@ -85,7 +85,12 @@ class DiagnosisItemViewSet(ModelViewSet):
 class LabelItemViewSet(ModelViewSet):
     serializer_class = LabelItemSerializer
     def get_queryset(self):
-        get_object_or_404(DiagnosisItem,pk=self.kwargs["diagnosisitem_pk"])
+        diagnosisItem = get_object_or_404(DiagnosisItem,pk=self.kwargs["diagnosisitem_pk"])
+        others = self.request.query_params.get('others')
+        if others == 'true':
+            return LabelItem.objects.filter(
+                diagnosisItem__pathologyPicture__id=diagnosisItem.pathologyPicture.id
+                ).exclude(diagnosisItem_id=self.kwargs["diagnosisitem_pk"])
         return LabelItem.objects.filter(diagnosisItem_id=self.kwargs["diagnosisitem_pk"])
         
     def get_serializer_context(self):
