@@ -17,6 +17,7 @@ RUN apt-get update
 RUN apt-get install -y default-mysql-client
 RUN apt-get install -y default-libmysqlclient-dev
 RUN apt-get install -y libvips-dev
+RUN apt-get install -y netcat
 WORKDIR /app
 COPY environment.yml .
 SHELL ["/bin/bash", "--login", "-c"]
@@ -25,7 +26,6 @@ RUN conda env create -f environment.yml
 RUN echo "conda activate django" >> ~/.bashrc
 COPY . .
 EXPOSE 80
-RUN apt-get install -y netcat
 
 COPY crontab_backup_mysql.sh /etc/periodic/hourly/crontab_backup_mysql
 RUN chmod u+x /etc/periodic/hourly/crontab_backup_mysql
