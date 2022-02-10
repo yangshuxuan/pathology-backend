@@ -101,11 +101,11 @@ class ReportViewSet(ModelViewSet):
     serializer_class = ReportSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['diagnosis_id']
-    def get_serializer_class(self):
-        if self.request.method=="PATCH":
-            return ReportPatchSerializer
-        else:
-            return ReportSerializer
+    # def get_serializer_class(self):
+    #     if self.request.method=="PATCH":
+    #         return ReportPatchSerializer
+    #     else:
+    #         return ReportSerializer
 def checkedElement():
     elm = OxmlElement('w:checked')
     elm.set(qn('w:val'),"true")

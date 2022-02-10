@@ -133,6 +133,10 @@ class Report(models.Model):
     modifiedAt = models.DateTimeField(auto_now=True,verbose_name="报告更新时间")
     diagnosis = models.OneToOneField(Diagnosis,on_delete=models.PROTECT,verbose_name="诊断",related_name="report")
     labelitems = models.ManyToManyField(LabelItem,blank=True,verbose_name="标注")
+    manyi = models.BooleanField(default=False,verbose_name="满意")
+    jinguanxibao = models.BooleanField(default=False,verbose_name="颈管细胞")
+    huashengxibao = models.BooleanField(default=False,verbose_name="化生细胞")
+    bumanyi = models.BooleanField(default=False,verbose_name="不满意")
     class Meta:
         verbose_name = '报告'
         verbose_name_plural = '报告集'
