@@ -48,7 +48,7 @@ class ReportSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Report
-        fields = ["id","diagnosis","labelitems","modifiedAt","createdAt"]
+        fields = ["id","diagnosis","labelitems","modifiedAt","createdAt","manyi","jinguanxibao","huashengxibao","bumanyi"]
 class ReportPatchSerializer(serializers.ModelSerializer):
     class Meta:
         model=Report
