@@ -143,8 +143,8 @@ class Report(models.Model):
     CL=models.BooleanField(default=False,verbose_name=  "线索细胞" )
     CMV=models.BooleanField(default=False,verbose_name=  "巨细胞病毒" )
     HSV=models.BooleanField(default=False,verbose_name=  "疱疹病毒" )
-    IM=models.BooleanField(default=False,verbose_name=  "炎症" )
-    S=models.BooleanField(default=False,verbose_name=  "萎缩" )
+    IM=models.BooleanField(default=False,verbose_name=  "炎症" )#10
+    S=models.BooleanField(default=False,verbose_name=  "萎缩" )#11
     ASC_US=models.BooleanField(default=False,verbose_name=  "非典型鳞状细胞意义不明" )
     ASC_H=models.BooleanField(default=False,verbose_name=  "非典型鳞状细胞不除外上皮高度病" )
     AGC_NSL_CC=models.BooleanField(default=False,verbose_name=  "非典型腺细胞(无具体指向)宫颈管" )#14
