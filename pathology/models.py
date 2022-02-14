@@ -147,18 +147,19 @@ class Report(models.Model):
     S=models.BooleanField(default=False,verbose_name=  "萎缩" )
     ASC_US=models.BooleanField(default=False,verbose_name=  "非典型鳞状细胞意义不明" )
     ASC_H=models.BooleanField(default=False,verbose_name=  "非典型鳞状细胞不除外上皮高度病" )
-    AGC_NSL_CC=models.BooleanField(default=False,verbose_name=  "非典型腺细胞(无具体指向)宫颈管" )
-    AGC_NSL_E=models.BooleanField(default=False,verbose_name=  "非典型腺细胞(无具体指向)宫内膜" )
+    AGC_NSL_CC=models.BooleanField(default=False,verbose_name=  "非典型腺细胞(无具体指向)宫颈管" )#14
+    AGC_NSL_E=models.BooleanField(default=False,verbose_name=  "非典型腺细胞(无具体指向)宫内膜" )#15
     AGC_NSL_US=models.BooleanField(default=False,verbose_name=  "非典型腺细胞(无具体指向)不能确定来源" )
-    LSIL=models.BooleanField(default=False,verbose_name=  "鳞状上皮内低度病变" )
-    AGC_FN_CC=models.BooleanField(default=False,verbose_name=  "非典型腺细胞(倾向瘤变)宫颈管" )
-    AGC_FN_US=models.BooleanField(default=False,verbose_name=  "非典型腺细胞(倾向瘤变)不能确定来源" )
-    HSIL=models.BooleanField(default=False,verbose_name=  "鳞状上皮内高度病变" )
-    AIS=models.BooleanField(default=False,verbose_name=  "颈管原位癌" )
-    SCC=models.BooleanField(default=False,verbose_name=  "鳞状细胞癌" )
+    LSIL=models.BooleanField(default=False,verbose_name=  "鳞状上皮内低度病变" )#17
+    AGC_FN_CC=models.BooleanField(default=False,verbose_name=  "非典型腺细胞(倾向瘤变)宫颈管" )#18
+    AGC_FN_US=models.BooleanField(default=False,verbose_name=  "非典型腺细胞(倾向瘤变)不能确定来源" )#19
+    HSIL=models.BooleanField(default=False,verbose_name=  "鳞状上皮内高度病变" )#20
+    AIS=models.BooleanField(default=False,verbose_name=  "颈管原位癌" )#21
+    SCC=models.BooleanField(default=False,verbose_name=  "鳞状细胞癌" )#22
     GC_CC=models.BooleanField(default=False,verbose_name=  "腺癌宫颈管" )
     GC_E=models.BooleanField(default=False,verbose_name=  "腺癌宫内膜" )
     GC_OT=models.BooleanField(default=False,verbose_name=  "腺癌其他" )
+    OTHER=models.BooleanField(default=False,verbose_name=  "其他恶性肿瘤" )
     class Meta:
         verbose_name = '报告'
         verbose_name_plural = '报告集'
