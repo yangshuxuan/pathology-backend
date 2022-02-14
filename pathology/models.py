@@ -160,6 +160,7 @@ class Report(models.Model):
     GC_E=models.BooleanField(default=False,verbose_name=  "腺癌宫内膜" )
     GC_OT=models.BooleanField(default=False,verbose_name=  "腺癌其他" )
     OTHER=models.BooleanField(default=False,verbose_name=  "其他恶性肿瘤" )
+    advice = models.TextField(blank=True,null=True,verbose_name="诊断意见")
     class Meta:
         verbose_name = '报告'
         verbose_name_plural = '报告集'
