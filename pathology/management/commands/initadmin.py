@@ -21,6 +21,6 @@ class Command(BaseCommand):
             print('Admin accounts can only be initialized if no Accounts exist')
         ai = usermodel.objects.filter(username="ai").first()
         if not ai:
-            ai = usermodel.objects.create(email="ai@163.com", username="ai", password="ai")
+            ai = usermodel.objects.create(email="ai@163.com", username="ai", password="ai")#这个方式创建密码有问题
             ai.is_active = True
             ai.save()

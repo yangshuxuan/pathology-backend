@@ -119,20 +119,16 @@ def notify_user(pathologyPictureItem_id):
 
     pathologyPicture = pathologyPictureItem.pathologyPicture
     
-    locFullPathName = readImageU(pathologyPicture)
+    locFullPathName = settings.MEDIA_ROOT/pathologyPicture.name
 
     fileName = Path(pathologyPicture.name).stem #没有后缀名的文件名
 
-    littleImageAfterCut = settings.CUTTED_IMAGES_DIR / fileName
-    littleImageAfterCutFiles = settings.CUTTED_IMAGES_DIR / f"{fileName}_files"
-    littleImageAfterCutDzi = settings.CUTTED_IMAGES_DIR / f"{fileName}.dzi"
+    littleImageAfterCut = (settings.MEDIA_ROOT/pathologyPicture.name).parent/fileName
+    # littleImageAfterCutFiles = settings.CUTTED_IMAGES_DIR / f"{fileName}_files"
+    # littleImageAfterCutDzi = settings.CUTTED_IMAGES_DIR / f"{fileName}.dzi"
 
     subprocess.run([settings.CUT_TOOL, "dzsave",str(locFullPathName),str(littleImageAfterCut),"--tile-size", "4096"])
-    for dirpath, dirnames, files in os.walk(str(littleImageAfterCutFiles)):
-        for file_name in files:
-            p=Path(dirpath,file_name)
-            writeImageCuttedImage(p)
-    writeImageCuttedImage(littleImageAfterCutDzi)
+    
             
 
     pathologyPictureItem.isCutted=True

@@ -19,7 +19,7 @@ from  django.http import HttpResponse
 from io import BytesIO
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
-from pathlib import Path
+from pathlib import Path,PurePosixPath
 from django_filters.rest_framework import DjangoFilterBackend
 from docxtpl import DocxTemplate, InlineImage,RichText
 
@@ -54,21 +54,24 @@ class DiagnosisItemViewSet(ModelViewSet):
     @action(detail=True)
     def image_detail(self,request,pk):
         pathologyPictureItem = DiagnosisItem.objects.get(pk=pk).pathologyPicture
-        
-        v = str(readImageDzi(pathologyPictureItem))
-        
+        pathologyPicture = pathologyPictureItem.pathologyPicture
+        dzi = f"{Path(pathologyPicture.name).stem}.dzi"
+        v =  (settings.MEDIA_ROOT/pathologyPicture.name).parent/dzi
         tree = ET.parse(v)
         root = tree.getroot()
-        o=urlparse(pathologyPictureItem.pathologyPicture.url)
+        o=urlparse(f"http://localhost:9001{pathologyPicture.url}")
 
-        fileName = Path(pathologyPictureItem.pathologyPicture.name).stem
-        remoteCuttedFiles=str(Path(settings.AWS_LOCATION,settings.CUTTED_IMAGES_LOCATION) / f"{fileName}_files")
+        fileName = f"{PurePosixPath(pathologyPicture.name).stem}_files"
+        remoteCuttedFiles = str(PurePosixPath(pathologyPicture.url).parent/fileName)
+        # remoteCuttedFiles=str(Path(settings.AWS_LOCATION,settings.CUTTED_IMAGES_LOCATION) / f"{fileName}_files")
         url = o._replace(path=str( f"{remoteCuttedFiles}/")).geturl()
+
+        # url = Path(pathologyPicture.url).parent/fileName
 
         data = {
             "Image": {
                 "xmlns": "http://schemas.microsoft.com/deepzoom/2009",
-                "Url": url,
+                "Url": str(url),
                 "Overlap": root.get("Overlap"),
                 "TileSize": root.get("TileSize"),
                 "Format": root.get("Format"),

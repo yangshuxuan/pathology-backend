@@ -99,10 +99,10 @@ WSGI_APPLICATION = 'storefront.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        # 'NAME': 'storefront4',
-        # 'HOST':'139.198.180.97',
-        'NAME': 'operatepathology',
-        'HOST':'db',
+        'NAME': 'storefront5',
+        'HOST':'139.198.180.97',
+        # 'NAME': 'operatepathology',
+        # 'HOST':'db',
         'USER':'root',
         'PASSWORD':'pcl123456'
     }
@@ -193,13 +193,14 @@ USE_L10N = True
 USE_TZ = True
 
 #切图工具的路径
-CUT_TOOL = "vips"
+# CUT_TOOL = "vips"
+CUT_TOOL = r"C:\Users\yangshuxuan\Downloads\vips-dev-w64-all-8.12.1\vips-dev-8.12\bin\vips.exe"
 
 ADMINS=[("admin","admin@163.com")]
-# MEDIA_ROOT = BASE_DIR / 'media/'
-# MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media/'
+MEDIA_URL = '/media/'
 
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 AWS_ACCESS_KEY_ID="UDWJHUJBEYTFXHUZRRRV"
 AWS_SECRET_ACCESS_KEY='FBmw5iebbyjA7HjwzNPGAluP6pzGeQKIKwX5bGrV'
 AWS_STORAGE_BUCKET_NAME="wuyuan"

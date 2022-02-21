@@ -27,8 +27,7 @@ urlpatterns = [
     path('auth/',include('djoser.urls')),
     path('auth/',include('djoser.urls.jwt')),
     path('__debug__/', include(debug_toolbar.urls)),
-]
-# + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # from djoser.urls import jwt
 from djoser import urls
 # from django.contrib.auth.middleware import AuthenticationMiddleware
