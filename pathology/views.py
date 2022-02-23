@@ -51,6 +51,8 @@ class DiagnosisViewSet(ModelViewSet):
 class DiagnosisItemViewSet(ModelViewSet):
     queryset = DiagnosisItem.objects.all()
     serializer_class = DiagnosisItemSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['pathologyPicture__id']
     @action(detail=True)
     def image_detail(self,request,pk):
         pathologyPictureItem = DiagnosisItem.objects.get(pk=pk).pathologyPicture
@@ -59,7 +61,7 @@ class DiagnosisItemViewSet(ModelViewSet):
         v =  (settings.MEDIA_ROOT/pathologyPicture.name).parent/dzi
         tree = ET.parse(v)
         root = tree.getroot()
-        o=urlparse(f"http://localhost:9001{pathologyPicture.url}")
+        o=urlparse(f"{pathologyPicture.url}")
 
         fileName = f"{PurePosixPath(pathologyPicture.name).stem}_files"
         remoteCuttedFiles = str(PurePosixPath(pathologyPicture.url).parent/fileName)
