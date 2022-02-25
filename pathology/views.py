@@ -63,7 +63,7 @@ class DiagnosisItemViewSet(ModelViewSet):
         v =  (settings.MEDIA_ROOT/pathologyPicture.name).parent/dzi
         tree = ET.parse(v)
         root = tree.getroot()
-        o=urlparse(f"http://localhost:9001{pathologyPicture.url}")
+        o=urlparse(f"{pathologyPicture.url}")
 
         fileName = f"{PurePosixPath(pathologyPicture.name).stem}_files"
         remoteCuttedFiles = str(PurePosixPath(pathologyPicture.url).parent/fileName)
