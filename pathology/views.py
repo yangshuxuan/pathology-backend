@@ -169,6 +169,10 @@ def generateDocument(request):
     GC_E = u"\u2611" if report.GC_E else u"\u2610"
     GC_OT = u"\u2611" if report.GC_OT else u"\u2610"
     OTHER = u"\u2611" if report.OTHER else u"\u2610"
+    c_names = ["M","TR","AM","CL","CMV","HSV","IM","S","ASC_US","ASC_H","AGC_NSL_CC","AGC_NSL_E","AGC_NSL_US","LSIL","AGC_FN_CC","AGC_FN_US","HSIL","AIS","SCC","GC_CC","GC_E","GC_OT","OTHER"]
+    c_names = [c for c in c_names if report.__getattribute__(c)]
+    advice = [f.verbose_name for f in Report._meta.fields if f.name in c_names]
+
     
 
     context = {
@@ -200,7 +204,7 @@ def generateDocument(request):
         "GC_E":GC_E,
         "GC_OT":GC_OT,
         "OTHER":OTHER,
-        "advice":report.advice,
+        "advice":f"{'' if report.advice is None else  report.advice} {','.join(advice)}",
         'allimages':allimages
         
     }
